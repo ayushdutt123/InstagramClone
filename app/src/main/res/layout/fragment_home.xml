@@ -18,7 +18,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Instagram"
+        app:title="Social World"
+        app:titleTextColor="#36c6ff"
         app:titleMarginStart="30dp" />
 
     <androidx.core.widget.NestedScrollView

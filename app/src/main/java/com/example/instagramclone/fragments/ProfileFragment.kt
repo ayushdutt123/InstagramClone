@@ -34,34 +34,41 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         binding.editProfile.setOnClickListener {
-            val intent=Intent(activity,SignUpActivity::class.java)
-            intent.putExtra("MODE",1)
-            activity?.startActivity(intent)
-            activity?.finish()
+            val intent = Intent(activity, SignUpActivity::class.java).apply {
+                putExtra("MODE", 1)
+            }
+            startActivity(intent)
         }
-        viewPagerAdapter=ViewPagerAdapter(requireActivity().supportFragmentManager)
-        viewPagerAdapter.addFragments(MyPostFragment(),"My Post")
-        viewPagerAdapter.addFragments(MyReelsFragment(),"My Reels")
-        binding.viewPager.adapter=viewPagerAdapter
+        viewPagerAdapter = ViewPagerAdapter(childFragmentManager)
+        viewPagerAdapter.addFragments(MyPostFragment(), "My Post")
+        viewPagerAdapter.addFragments(MyReelsFragment(), "My Reels")
+        binding.viewPager.adapter = viewPagerAdapter
         binding.tabLayout.setupWithViewPager(binding.viewPager)
 
         return binding.root
     }
 
-    companion object {
-
-    }
-
     override fun onStart() {
         super.onStart()
-        Firebase.firestore.collection(USER_NODE).document(Firebase.auth.currentUser!!.uid).get()
-            .addOnSuccessListener {
-                val user:User=it.toObject<User>()!!
-                binding.name.text=user.name
-                binding.bio.text=user.email
-                if (!user.image.isNullOrEmpty()){
-                    Picasso.get().load(user.image).into(binding.profileImage)
+        val currentUser = Firebase.auth.currentUser
+        if (currentUser != null) {
+            Firebase.firestore.collection(USER_NODE).document(currentUser.uid).get()
+                .addOnSuccessListener {
+                    val user: User? = it.toObject<User>()
+                    user?.let {
+                        binding.name.text = user.name
+                        binding.bio.text = user.email
+                        if (!user.image.isNullOrEmpty()) {
+                            Picasso.get().load(user.image).into(binding.profileImage)
+                        }
+                    }
                 }
-            }
+                .addOnFailureListener { e ->
+                    // Handle the error appropriately
+                    e.printStackTrace()
+                }
+        } else {
+            // Handle the case when currentUser is null (e.g., redirect to login screen)
+        }
     }
 }

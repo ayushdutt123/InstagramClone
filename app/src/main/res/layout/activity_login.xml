@@ -11,7 +11,7 @@
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_marginTop="136dp"
-        android:src="@drawable/instagram"
+        android:src="@drawable/mainlogo"
         app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
         app:layout_constraintEnd_toEndOf="parent"
